@@ -1,7 +1,8 @@
 <script setup>
 import { useAuthStore } from "@/stores/auth";
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import feather from "feather-icons";
 
 const authStore = useAuthStore();
 const { loading, error } = storeToRefs(authStore);
@@ -12,9 +13,10 @@ const form = ref({
   password: null,
 });
 
-// TODO: Implement handleSubmit function
-// Hint: This should call the login function from auth store
-// and handle any errors
+onMounted(async () => {
+  feather.replace();
+});
+
 const handleSubmit = async () => {
   await login(form.value);
 
