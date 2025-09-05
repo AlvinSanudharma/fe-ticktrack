@@ -3,6 +3,7 @@ import { useAuthStore } from "@/stores/auth";
 import { storeToRefs } from "pinia";
 import { ref, onMounted } from "vue";
 import feather from "feather-icons";
+import { toast } from "vue3-toastify";
 
 const authStore = useAuthStore();
 const { loading, error } = storeToRefs(authStore);
@@ -25,7 +26,7 @@ const handleSubmit = async () => {
   if (error.value === "Unauthorized") {
     form.value.password = null;
 
-    alert("Email atau password salah");
+    toast.error("Email atau password salah");
   }
 };
 
@@ -75,7 +76,6 @@ const togglePassword = () => {
           placeholder="••••••••"
         />
         <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
-          <!-- TODO: Add click handler for password toggle -->
           <button
             @click="togglePassword"
             type="button"
@@ -159,7 +159,6 @@ const togglePassword = () => {
 
     <!-- Submit Button -->
     <div>
-      <!-- TODO: Add loading state to button -->
       <button
         type="submit"
         class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
