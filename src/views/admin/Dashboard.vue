@@ -1,7 +1,5 @@
 <script setup>
-// TODO: Import necessary dependencies
-// Hint: You'll need to import from vue, chart.js/auto, pinia, feather-icons, lodash, and luxon
-import { onMounted, watch } from "vue";
+import { onMounted, useTemplateRef, watch } from "vue";
 import { Chart } from "chart.js/auto";
 import { storeToRefs } from "pinia";
 import feather from "feather-icons";
@@ -27,11 +25,42 @@ const toggleTicketMenu = (ticket) => {
 let chart = null;
 watch(statistic, () => {});
 
-// TODO: Implement onMounted hook
-// Hint: Fetch tickets and statistics, initialize chart with status distribution data, initialize feather icons
+const chartRef = useTemplateRef("statusChart");
+
 onMounted(async () => {
   await fetchTickets();
   await fetchStatistics();
+
+  const statusCtx = chartRef.value?.getContext("2d");
+
+  if (statusCtx && statistic.value) {
+    chart = new Chart(statusCtx, {
+      type: "doughnut",
+      data: {
+        labels: ["open", "onprogress", "resolved", "rejected"],
+        datasets: [
+          {
+            data: [
+              statistic.value.status_distribution?.open,
+              statistic.value.status_distribution?.on_progress,
+              statistic.value.status_distribution?.resolved,
+              statistic.value.status_distribution?.rejected,
+            ],
+            backgroundColor: ["#3B82F6", "#F59E0B", "#10B981", "#EF4444"],
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: "bottom",
+          },
+        },
+        cutout: "70%",
+      },
+    });
+  }
 
   feather.replace();
 });
@@ -205,7 +234,7 @@ onMounted(async () => {
       <h3 class="text-lg font-semibold text-gray-800 mb-4">
         Distribusi Status
       </h3>
-      <canvas id="statusChart" height="300"></canvas>
+      <canvas id="statusChart" ref="statusChart" height="300"></canvas>
     </div>
   </div>
 </template>
