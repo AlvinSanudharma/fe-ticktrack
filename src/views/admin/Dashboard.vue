@@ -145,7 +145,7 @@ onMounted(async () => {
         <div>
           <p class="text-sm font-medium text-gray-600">Rata-rata Waktu</p>
           <h3 class="text-2xl font-bold text-gray-800 mt-1">
-            {{ statistic?.avg_resolution_time ?? 0 }} Jam
+            {{ statistic?.avg_resolution_time ?? 0 }}
           </h3>
         </div>
         <div class="p-3 bg-purple-50 rounded-lg">
