@@ -4,7 +4,7 @@ import { handleError } from "@/helpers/errorHelper";
 
 export const useDashboardStore = defineStore("dashboard", {
   state: () => ({
-    statistics: null,
+    statistic: null,
     loading: false,
     error: null,
     success: null,
@@ -17,7 +17,7 @@ export const useDashboardStore = defineStore("dashboard", {
       try {
         const response = await axiosInstance.get("/dashboard/statistics");
 
-        this.statistics = response.data.data;
+        this.statistic = response.data.data;
       } catch (error) {
         this.error = handleError(error);
       } finally {
