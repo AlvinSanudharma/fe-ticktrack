@@ -53,13 +53,6 @@ export const useAuthStore = defineStore("auth", {
     },
 
     async logout() {
-      // TODO: Implement logout action
-      // Steps:
-      // 1. Set loading state
-      // 2. Make API call to logout endpoint
-      // 3. Remove token from cookies
-      // 4. Clear user state
-      // 5. Redirect to login
       this.loading = true;
 
       try {
