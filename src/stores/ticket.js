@@ -29,13 +29,17 @@ export const useTicketStore = defineStore("ticket", {
     },
 
     async fetchTicket(code) {
-      // TODO: Implement fetchTicket action
-      // Steps:
-      // 1. Set loading state
-      // 2. Make API call to get ticket details
-      // 3. Return ticket data
-      // 4. Handle error
-      // 5. Reset loading state
+      this.loading = true;
+
+      try {
+        const response = await axiosInstance.get(`/ticket/${code}`);
+
+        return response.data.data;
+      } catch (error) {
+        this.error = handleError(error);
+      } finally {
+        this.loading = false;
+      }
     },
 
     async createTicket(payload) {
