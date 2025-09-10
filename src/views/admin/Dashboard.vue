@@ -20,10 +20,23 @@ const toggleTicketMenu = (ticket) => {
   ticket.showMenu = !ticket.showMenu;
 };
 
-// TODO: Create chart variable and watch effect
-// Hint: Watch statistic changes and update chart data
 let chart = null;
-watch(statistic, () => {});
+watch(
+  statistic,
+  () => {
+    if (statistic.value && chart) {
+      chart.data.datasets[0].data = [
+        statistic.value.status_distribution?.open,
+        statistic.value.status_distribution?.on_progress,
+        statistic.value.status_distribution?.resolved,
+        statistic.value.status_distribution?.rejected,
+      ];
+
+      chart.update();
+    }
+  },
+  { deep: true }
+);
 
 const chartRef = useTemplateRef("statusChart");
 
