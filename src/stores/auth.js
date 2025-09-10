@@ -28,6 +28,11 @@ export const useAuthStore = defineStore("auth", {
 
         Cookies.set("token", token);
 
+        await localStorage.setItem(
+          "user",
+          JSON.stringify(response.data.data.user)
+        );
+
         this.success = response.data.message;
 
         if (response.data.data.user.role === "admin") {
