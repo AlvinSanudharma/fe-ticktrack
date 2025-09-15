@@ -66,7 +66,7 @@ onMounted(async () => {
                 :class="{
                   'text-blue-700 bg-blue-100': ticket.status === 'open',
                   'text-yellow-700 bg-yellow-100':
-                    ticket.status === 'in_progress',
+                    ticket.status === 'onprogress',
                   'text-green-700 bg-green-100': ticket.status === 'resolved',
                   'text-red-700 bg-red-100': ticket.status === 'rejected',
                 }"
@@ -164,7 +164,7 @@ onMounted(async () => {
                 class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               >
                 <option value="open" class="text-blue-700">Open</option>
-                <option value="in_progress" class="text-yellow-700">
+                <option value="onprogress" class="text-yellow-700">
                   On Progress
                 </option>
                 <option value="resolved" class="text-green-700">
@@ -174,12 +174,18 @@ onMounted(async () => {
               </select>
             </div>
           </div>
-          <textarea
-            v-model="form.content"
-            class="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-            rows="4"
-            placeholder="Tulis jawaban Anda di sini..."
-          ></textarea>
+          <div>
+            <textarea
+              v-model="form.content"
+              class="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              :class="{ 'border-red-500 ring-red-500': error?.content }"
+              rows="4"
+              placeholder="Tulis jawaban Anda di sini..."
+            ></textarea>
+            <p class="mt-1 text-xs text-red-500" v-if="error?.content">
+              {{ error?.content?.join(", ") }}
+            </p>
+          </div>
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
               <button
@@ -198,7 +204,8 @@ onMounted(async () => {
               class="px-6 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
             >
               <i data-feather="send" class="w-4 h-4 inline-block mr-2"></i>
-              Kirim Jawaban
+              <span v-if="!loading"> Kirim Jawaban </span>
+              <span v-else> Loading </span>
             </button>
           </div>
         </form>
