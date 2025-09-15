@@ -109,7 +109,7 @@ router.beforeEach(async (to, from, next) => {
           await authStore.checkAuth();
         }
 
-        if (user?.role === "admin" && to.name === "dashboard") {
+        if (user?.role === "admin" && to.name === "app.dashboard") {
           return next({ name: "admin.dashboard", replace: true });
         }
 

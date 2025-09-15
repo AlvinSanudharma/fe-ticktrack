@@ -65,6 +65,8 @@ export const useAuthStore = defineStore("auth", {
 
         Cookies.remove("token");
 
+        await localStorage.removeItem("user");
+
         this.user = null;
         this.error = null;
 
