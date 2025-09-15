@@ -7,9 +7,11 @@ import { capitalize } from "lodash";
 import { DateTime } from "luxon";
 import { useDashboardStore } from "@/stores/dashboard";
 import { useTicketStore } from "@/stores/ticket";
+import { Skeleton } from "@brayamvalero/vue3-skeleton";
+import "@brayamvalero/vue3-skeleton/dist/style.css";
 
 const dashboardStore = useDashboardStore();
-const { statistic } = storeToRefs(dashboardStore);
+const { loading, statistic } = storeToRefs(dashboardStore);
 const { fetchStatistics } = dashboardStore;
 
 const ticketStore = useTicketStore();
@@ -89,7 +91,9 @@ onMounted(async () => {
         <div>
           <p class="text-sm font-medium text-gray-600">Total Tiket</p>
           <h3 class="text-2xl font-bold text-gray-800 mt-1">
-            {{ statistic?.total_tickets ?? 0 }}
+            <Skeleton :loading="loading">
+              {{ statistic?.total_tickets }}
+            </Skeleton>
           </h3>
         </div>
         <div class="p-3 bg-blue-50 rounded-lg">
@@ -112,7 +116,9 @@ onMounted(async () => {
         <div>
           <p class="text-sm font-medium text-gray-600">Tiket Aktif</p>
           <h3 class="text-2xl font-bold text-gray-800 mt-1">
-            {{ statistic?.active_tickets ?? 0 }}
+            <Skeleton :loading="loading">
+              {{ statistic?.active_tickets }}
+            </Skeleton>
           </h3>
         </div>
         <div class="p-3 bg-yellow-50 rounded-lg">
@@ -135,7 +141,9 @@ onMounted(async () => {
         <div>
           <p class="text-sm font-medium text-gray-600">Selesai</p>
           <h3 class="text-2xl font-bold text-gray-800 mt-1">
-            {{ statistic?.resolved_tickets ?? 0 }}
+            <Skeleton :loading="loading">
+              {{ statistic?.resolved_tickets }}
+            </Skeleton>
           </h3>
         </div>
         <div class="p-3 bg-green-50 rounded-lg">
@@ -158,7 +166,9 @@ onMounted(async () => {
         <div>
           <p class="text-sm font-medium text-gray-600">Rata-rata Waktu</p>
           <h3 class="text-2xl font-bold text-gray-800 mt-1">
-            {{ statistic?.avg_resolution_time ?? 0 }}
+            <Skeleton :loading="loading">
+              {{ statistic?.avg_resolution_time }}
+            </Skeleton>
           </h3>
         </div>
         <div class="p-3 bg-purple-50 rounded-lg">
@@ -201,17 +211,26 @@ onMounted(async () => {
           <div class="flex items-center justify-between">
             <div>
               <h4 class="text-sm font-medium text-gray-800">
-                {{ ticket.title }}
+                <Skeleton :loading="loading">
+                  {{ ticket.title }}
+                </Skeleton>
               </h4>
-              <p class="text-xs text-gray-500 mt-1">#{{ ticket.code }}</p>
+              <p class="text-xs text-gray-500 mt-1">
+                <Skeleton :loading="loading"> #{{ ticket.code }} </Skeleton>
+              </p>
               <div class="flex items-center mt-2 space-x-2">
+                <Skeleton width="60px" height="16px" v-if="loading" />
+
                 <span
+                  v-else
                   class="px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full"
                 >
                   {{ capitalize(ticket.status) }}
                 </span>
                 <span class="text-xs text-gray-500">
-                  {{ DateTime.fromISO(ticket.created_at).toRelative() }}
+                  <Skeleton :loading="loading">
+                    {{ DateTime.fromISO(ticket.created_at).toRelative() }}
+                  </Skeleton>
                 </span>
               </div>
             </div>
