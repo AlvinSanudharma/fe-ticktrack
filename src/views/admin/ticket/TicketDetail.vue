@@ -7,23 +7,17 @@ import { DateTime } from "luxon";
 import { useRoute } from "vue-router";
 import { useTicketStore } from "@/stores/ticket";
 
-const ticketStore = useTicketStore();
-const { success, error, loading } = storeToRefs(ticketStore);
-const { fetchTicket, createTicketReply } = ticketStore;
-
 const route = useRoute();
 
-// TODO: Create refs for ticket and form
-// Hint: You'll need ticket object and form with status and content fields
 const ticket = ref({});
 const form = ref({
   status: "",
   content: "",
 });
 
-// TODO: Get store methods and refs
-// Hint: Destructure success, error, loading from storeToRefs
-// Hint: Destructure fetchTicket and createTicketReply methods
+const ticketStore = useTicketStore();
+const { error, loading } = storeToRefs(ticketStore);
+const { fetchTicket, createTicketReply } = ticketStore;
 
 const fetchTicketDetail = async () => {
   const response = await fetchTicket(route.params.code);
@@ -32,17 +26,12 @@ const fetchTicketDetail = async () => {
   form.value.status = response.status;
 };
 
-// TODO: Implement handleSubmit function
-// Hint: This should call createTicketReply with code and form
-// Then refetch ticket details
 const handleSubmit = async () => {
   await createTicketReply(route.params.code, form.value);
 
   await fetchTicketDetail();
 };
 
-// TODO: Implement onMounted hook
-// Hint: Fetch initial ticket details and initialize feather icons
 onMounted(async () => {
   await fetchTicketDetail();
 
