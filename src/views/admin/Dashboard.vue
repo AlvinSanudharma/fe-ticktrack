@@ -227,10 +227,9 @@ onMounted(async () => {
                 >
                   {{ capitalize(ticket.status) }}
                 </span>
-                <span class="text-xs text-gray-500">
-                  <Skeleton :loading="loading">
-                    {{ DateTime.fromISO(ticket.created_at).toRelative() }}
-                  </Skeleton>
+                <Skeleton width="40px" height="16px" v-if="loading" />
+                <span class="text-xs text-gray-500" v-else>
+                  {{ DateTime.fromISO(ticket.created_at).toRelative() }}
                 </span>
               </div>
             </div>

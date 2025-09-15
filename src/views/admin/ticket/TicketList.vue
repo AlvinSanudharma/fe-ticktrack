@@ -7,7 +7,7 @@ import { DateTime } from "luxon";
 import { useTicketStore } from "@/stores/ticket";
 
 const ticketStore = useTicketStore();
-const { tickets } = storeToRefs(ticketStore);
+const { loading, tickets } = storeToRefs(ticketStore);
 const { fetchTickets } = ticketStore;
 
 const filters = ref({
@@ -136,25 +136,44 @@ onMounted(async () => {
               <td
                 class="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600"
               >
-                #{{ ticket.code }}
+                <Skeleton :loading="loading"> #{{ ticket.code }} </Skeleton>
               </td>
               <td class="px-6 py-4">
-                <div class="text-sm text-gray-800">{{ ticket.title }}</div>
+                <div class="text-sm text-gray-800">
+                  <Skeleton :loading="loading">
+                    {{ ticket.title }}
+                  </Skeleton>
+                </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center">
+                <div class="flex items-center space-x-2">
+                  <Skeleton
+                    v-if="loading"
+                    width="32px"
+                    height="32px"
+                    circle
+                    class="flex-shrink-0 inline-block"
+                  />
+
                   <img
+                    v-else
                     :src="`https://ui-avatars.com/api/?name=${ticket.user.name}&background=0D8ABC&color=fff`"
                     :alt="ticket.user.name"
                     class="w-6 h-6 rounded-full"
                   />
-                  <span class="ml-2 text-sm text-gray-800">{{
-                    ticket.user.name
-                  }}</span>
+
+                  <span class="ml-2 text-sm text-gray-800">
+                    <Skeleton width="40px" height="10px" :loading="loading">
+                      {{ ticket.user.name }}
+                    </Skeleton>
+                  </span>
                 </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
+                <Skeleton width="40px" height="16px" v-if="loading" />
+
                 <span
+                  v-else
                   class="px-3 py-1 text-xs font-medium rounded-full"
                   :class="{
                     'text-blue-700 bg-blue-100': ticket.status === 'open',
@@ -168,7 +187,10 @@ onMounted(async () => {
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
+                <Skeleton width="40px" height="16px" v-if="loading" />
+
                 <span
+                  v-else
                   class="px-3 py-1 text-xs font-medium rounded-full"
                   :class="{
                     'text-red-700 bg-red-100': ticket.priority === 'high',
@@ -181,11 +203,13 @@ onMounted(async () => {
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                {{
-                  DateTime.fromISO(ticket.created_at).toFormat(
-                    "dd MMMM yyyy HH:mm"
-                  )
-                }}
+                <Skeleton :loading="loading">
+                  {{
+                    DateTime.fromISO(ticket.created_at).toFormat(
+                      "dd MMMM yyyy HH:mm"
+                    )
+                  }}
+                </Skeleton>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm">
                 <RouterLink
