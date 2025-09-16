@@ -25,8 +25,6 @@ watch(
   { deep: true }
 );
 
-// TODO: Implement onMounted hook
-// Hint: Fetch initial tickets and initialize feather icons
 onMounted(async () => {
   await fetchTickets();
 
