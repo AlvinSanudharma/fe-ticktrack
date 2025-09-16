@@ -20,6 +20,7 @@ export const useAuthStore = defineStore("auth", {
   actions: {
     async login(credentials) {
       this.loading = true;
+      this.error = null;
 
       try {
         const response = await axiosInstance.post("/login", credentials);
@@ -59,10 +60,10 @@ export const useAuthStore = defineStore("auth", {
 
         Cookies.set("token", token);
 
-        // await localStorage.setItem(
-        //   "user",
-        //   JSON.stringify(response.data.data.user)
-        // );
+        await localStorage.setItem(
+          "user",
+          JSON.stringify({ ...response.data.data.user, role: "user" })
+        );
 
         router.push({ name: "app.dashboard" });
       } catch (error) {
