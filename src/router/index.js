@@ -25,6 +25,7 @@ const router = createRouter({
           component: AppDashboard,
           meta: {
             requiresAuth: true,
+            role: "user",
             title: "Dashboard",
           },
         },
@@ -34,6 +35,7 @@ const router = createRouter({
           component: AppTicketDetail,
           meta: {
             requiresAuth: true,
+            role: "user",
             title: "Ticket Detail",
           },
         },
@@ -41,6 +43,11 @@ const router = createRouter({
           path: "ticket/create",
           name: "app.ticket.create",
           component: AppTicketCreate,
+          meta: {
+            requiresAuth: true,
+            role: "user",
+            title: "Create Ticket",
+          },
         },
       ],
     },
@@ -54,6 +61,7 @@ const router = createRouter({
           component: Dashboard,
           meta: {
             requiresAuth: true,
+            role: "admin",
             title: "Dashboard",
           },
         },
@@ -63,6 +71,7 @@ const router = createRouter({
           component: TicketList,
           meta: {
             requiresAuth: true,
+            role: "admin",
             title: "Ticket",
           },
         },
@@ -72,6 +81,7 @@ const router = createRouter({
           component: TicketDetail,
           meta: {
             requiresAuth: true,
+            role: "admin",
             title: "Ticket Detail",
           },
         },
@@ -85,11 +95,17 @@ const router = createRouter({
           path: "login",
           name: "login",
           component: Login,
+          meta: {
+            requiresUnauth: true,
+          },
         },
         {
           path: "register",
           name: "register",
           component: Register,
+          meta: {
+            requiresUnauth: true,
+          },
         },
       ],
     },
@@ -98,7 +114,6 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
-
   const userFromLocal = await localStorage.getItem("user");
   const user = JSON.parse(userFromLocal);
 
@@ -108,6 +123,17 @@ router.beforeEach(async (to, from, next) => {
         if (!authStore.user) {
           await authStore.checkAuth();
         }
+
+        const requiredRole = to.meta.role;
+
+        if (requiredRole && user?.role !== requiredRole) {
+          if (user?.role === "admin") {
+            return next({ name: "admin.dashboard" });
+          } else {
+            return next({ name: "app.dashboard" });
+          }
+        }
+
         next();
       } catch (error) {
         next({ name: "login" });
@@ -116,7 +142,11 @@ router.beforeEach(async (to, from, next) => {
       next({ name: "login" });
     }
   } else if (to.meta.requiresUnauth && authStore.token) {
-    next({ name: "dashboard" });
+    if (user?.role === "admin") {
+      next({ name: "admin.dashboard" });
+    } else {
+      next({ name: "app.dashboard" });
+    }
   } else {
     next();
   }
