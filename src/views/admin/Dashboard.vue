@@ -244,13 +244,16 @@ onMounted(async () => {
                 v-show="ticket.showMenu"
                 class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-1 z-50"
               >
-                <a
-                  :href="`/ticket/${ticket.code}`"
+                <RouterLink
+                  :to="{
+                    name: 'admin.ticket.detail',
+                    params: { code: ticket.code },
+                  }"
                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                 >
                   <i data-feather="eye" class="w-4 h-4 inline-block mr-2"></i>
                   Lihat Detail
-                </a>
+                </RouterLink>
               </div>
             </div>
           </div>

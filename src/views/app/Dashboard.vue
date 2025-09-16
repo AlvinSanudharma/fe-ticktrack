@@ -5,6 +5,7 @@ import { debounce } from "lodash";
 import feather from "feather-icons";
 import { DateTime } from "luxon";
 import { useTicketStore } from "@/stores/ticket";
+import { capitalize } from "lodash";
 
 const ticketStore = useTicketStore();
 const { tickets, success } = storeToRefs(ticketStore);
@@ -91,7 +92,7 @@ onMounted(async () => {
         >
           <option value="">Semua Status</option>
           <option value="open">Open</option>
-          <option value="in_progress">In Progress</option>
+          <option value="onprogress">In Progress</option>
           <option value="resolved">Resolved</option>
           <option value="rejected">Rejected</option>
         </select>
@@ -137,13 +138,27 @@ onMounted(async () => {
                 {{ ticket.title }}
               </h3>
               <span
-                class="px-3 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full"
-                >Open</span
+                class="px-3 py-1 text-sm rounded-lg"
+                :class="{
+                  'text-blue-700 bg-blue-100': ticket.status === 'open',
+                  'text-yellow-700 bg-yellow-100':
+                    ticket.status === 'onprogress',
+                  'text-green-700 bg-green-100': ticket.status === 'resolved',
+                  'text-red-700 bg-red-100': ticket.status === 'rejected',
+                }"
               >
+                {{ capitalize(ticket.status) }}
+              </span>
               <span
-                class="px-3 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-full"
-                >Tinggi</span
+                class="px-3 py-1 text-sm rounded-lg"
+                :class="{
+                  'text-red-700 bg-red-100': ticket.priority === 'high',
+                  'text-yellow-700 bg-yellow-100': ticket.priority === 'medium',
+                  'text-green-700 bg-green-100': ticket.priority === 'low',
+                }"
               >
+                {{ capitalize(ticket.priority) }}
+              </span>
             </div>
             <p class="text-sm text-gray-500 mt-1">
               #{{ ticket.code }} • Dibuat pada

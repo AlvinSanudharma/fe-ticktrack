@@ -27,6 +27,8 @@ const handleSubmit = async () => {
     form.value.password = null;
 
     toast.error("Email atau password salah");
+  } else {
+    toast.error("Terjadi kesalahan");
   }
 };
 

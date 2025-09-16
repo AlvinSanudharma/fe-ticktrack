@@ -99,34 +99,15 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
 
+  const userFromLocal = await localStorage.getItem("user");
+  const user = JSON.parse(userFromLocal);
+
   if (to.meta.requiresAuth) {
     if (authStore.token) {
-      const userFromLocal = await localStorage.getItem("user");
-      const user = JSON.parse(userFromLocal);
-
       try {
         if (!authStore.user) {
           await authStore.checkAuth();
         }
-
-        if (
-          user?.role === "user" &&
-          to.name === "admin.dashboard" &&
-          to.name === "login" &&
-          to.name === "register"
-        ) {
-          return next({ name: "dashboard", replace: true });
-        }
-
-        if (
-          user?.role === "admin" &&
-          to.name === "app.dashboard" &&
-          to.name === "login" &&
-          to.name === "register"
-        ) {
-          return next({ name: "admin.dashboard", replace: true });
-        }
-
         next();
       } catch (error) {
         next({ name: "login" });
